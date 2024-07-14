@@ -1,0 +1,22 @@
+.banner {
+    /* Styles applied at all times */
+    height: var(--desk-height);
+    width: 100%;
+    background-size: "cover";
+    background-image: var(--bg-image);
+    background-position: center center;
+  }
+  .banner-content{
+        display: "flex";
+        flex-direction: "column";
+        justify-content: "center";
+        align-items: "center";
+  }
+  @media (max-width: 800px) {
+    .banner {
+      width: 100%;
+      background-position: var(--bg-position);
+      background-image: var(--bg-image);
+      height: var(--mb-height);
+    }
+  }
