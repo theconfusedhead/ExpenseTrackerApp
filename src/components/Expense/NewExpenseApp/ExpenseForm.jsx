@@ -60,19 +60,21 @@ const ExpenseForm = ({ getTotalExpense }) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <label>Expense Name:</label>
+        <label class="form-label">Expense Name:</label>
         <input
           type="text"
           name="expenseName"
           value={dataInput.expenseName}
           onChange={handleChange}
+          className="form-control"
         />
-        <label>Expense amount:</label>
+        <label class="form-label">Expense amount:</label>
         <input
           type="text"
           name="amount"
           value={dataInput.amount}
           onChange={handleChange}
+          className="form-control"
         />
         <label>Expense date:</label>
         <input
@@ -80,8 +82,10 @@ const ExpenseForm = ({ getTotalExpense }) => {
           name="date"
           value={dataInput.date}
           onChange={handleChange}
+          className="form-control"
+
         />
-        <button type="submit">Submit</button>
+        <button type="submit" className="btn btn-secondary my-3">Submit</button>
       </form>
       <AllExpense allExpense={allExpense} deleteExpense={deleteExpense} />
     </>

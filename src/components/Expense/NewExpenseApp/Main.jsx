@@ -2,7 +2,7 @@ import React from "react";
 import Salary from "./Salary";
 const Main = () => {
   return (
-    <div>
+    <div className="container">
       <Salary />
     </div>
   );

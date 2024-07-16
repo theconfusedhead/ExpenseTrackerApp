@@ -7,16 +7,23 @@ const AllExpense = ({ allExpense, deleteExpense }) => {
   };
   const showExpense = allExpense.map((expense, index) => {
     return (
-      <div key={expense.id} className="col-4 d-flex align-items-center justify-content-around">
-        <p>{`${index + 1})`}</p>
-        <p>
+      <div
+        key={expense.id}
+        className="d-flex align-items-center justify-content-between bg-light p-2 mb-2 rounded"
+      >
+        <span className="me-2">{`${index + 1})`}</span>
+        <span className="flex-grow-1 me-2">
           {`${expense.expenseName
             .charAt(0)
             .toUpperCase()}${expense.expenseName.slice(1)}`}
-        </p>
-
-        <p>{`${expense.amount} ${expense.date}`}</p>
-        <button onClick={() => handleDelete(expense.id)}>Delete</button>
+        </span>
+        <span className="me-2">{`${expense.amount} ${expense.date}`}</span>
+        <button
+          onClick={() => handleDelete(expense.id)}
+          className="btn btn-secondary btn-sm"
+        >
+          Delete
+        </button>
       </div>
     );
   });

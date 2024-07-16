@@ -34,43 +34,54 @@ const Salary = () => {
   const remainingSalary = parseFloat(inputSalary) - parseFloat(totalExpense);
 
   return (
-    <div className="container">
-      <h1 className="text-center">Your Monthly Expense Tracker</h1>
-      <div className="row mt-5">
-        <div className="col-6">
-          <form onSubmit={handleSalarySubmit}>
-            <label>Salary:</label>
-            <input
-              type="text"
-              onChange={handleSalary}
-              value={salary}
-              name="salary"
-            />
-            <button type="submit">Enter your Salary!</button>
-            <button type="button" onClick={resetMonth}>
-              Reset Month
-            </button>
-          </form>
-        </div>
-        <div className="col-3">
-          <p>{inputSalary ? `Your salary is: ${inputSalary}` : ""}</p>
-          <p>{inputSalary ? `Your total expense: ${totalExpense}` : ""}</p>
-          <p>
-            {inputSalary ? `Your remaining salary: ${remainingSalary}` : ""}
-          </p>
-        </div>
-        <div className="col-3">
-          <SummaryView />
-        </div>
-      </div>
-      {inputSalary && (
-        <div className="row">
+    <>
+      <div className="container">
+        <h1 className="text-center display-4">Your Monthly Expense Tracker</h1>
+        <div className="row d-flex justify-content-around mt-5">
           <div className="col">
-            <ExpenseForm getTotalExpense={getTotalExpense} />
+            <form onSubmit={handleSalarySubmit}>
+              <div className="mb-3">
+                <label class="form-label">Salary:</label>
+                <input
+                  type="text"
+                  onChange={handleSalary}
+                  value={salary}
+                  name="salary"
+                  class="form-control"
+                />
+              </div>
+              <button type="submit" className="btn btn-secondary">
+                Enter your Salary!
+              </button>
+              <button
+                type="button"
+                className="btn btn-secondary m-3"
+                onClick={resetMonth}
+              >
+                Reset Month
+              </button>
+            </form>
+          </div>
+          <div className="col">
+            <div className="text-center">
+              <p class="lead">
+                {inputSalary ? `Your salary is: ${inputSalary}` : ""}
+              </p>
+              <p class="lead">
+                {" "}
+                {inputSalary ? `Your total expense: ${totalExpense}` : ""}
+              </p>
+              <p class="lead">
+                {inputSalary ? `Your remaining salary: ${remainingSalary}` : ""}
+              </p>
+            </div>
           </div>
         </div>
-      )}
-    </div>
+        <div>
+          {inputSalary && <ExpenseForm getTotalExpense={getTotalExpense} />}
+        </div>
+      </div>
+    </>
   );
 };
 
