@@ -1,12 +1,13 @@
 import React from "react";
 import { format } from "date-fns";
+import "./style.css";
 const AllExpense = ({ allExpense, deleteExpense }) => {
   const handleDelete = (id) => {
     console.log(id);
     deleteExpense(id);
   };
   const showExpense = allExpense.map((expense, index) => {
-    const formattedDate = format(new Date(expense.date), "dd-MMM-yyyy");
+    const formattedDate = format(new Date(expense.date), "dd MMM");
     return (
       <div
         key={expense.id}
@@ -34,18 +35,18 @@ const AllExpense = ({ allExpense, deleteExpense }) => {
   return (
     <div className="mt-5">
       <h4>Your Expenses:</h4>
-      <div className="row align-items-center bg-light p-2 mb-2 rounded">
-        <div className="col-1">
-          <h3>S No</h3>
+      <div class="row flex-nowrap overflow-auto bg-light p-2 mb-2 rounded">
+        <div class="col-3 col-sm-1">
+          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">S No</h3>
         </div>
-        <div className="col-4">
-          <h3>Expense Name</h3>
+        <div class="col-3 col-sm-4">
+          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">Name</h3>
         </div>
-        <div className="col-3">
-          <h3>Expense Amount</h3>
+        <div class="col-3 col-sm-3">
+          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">Amount</h3>
         </div>
-        <div className="col-4">
-          <h3>Date</h3>
+        <div class="col-3 col-sm-4">
+          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">Date</h3>
         </div>
       </div>
       <div>{showExpense}</div>
