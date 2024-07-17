@@ -1,6 +1,6 @@
 import React from "react";
 import { format } from "date-fns";
-import "./style.css";
+
 const AllExpense = ({ allExpense, deleteExpense }) => {
   const handleDelete = (id) => {
     console.log(id);
