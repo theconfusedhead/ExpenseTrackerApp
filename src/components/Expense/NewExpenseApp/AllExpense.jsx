@@ -1,32 +1,52 @@
-import React from "react";
+import React, { useState } from "react";
 import { format } from "date-fns";
 
-const AllExpense = ({ allExpense, deleteExpense }) => {
+const AllExpense = ({ allExpense, deleteExpense, edit }) => {
+  // const [editExpense, setEditExpense] = useState("");
   const handleDelete = (id) => {
-    console.log(id);
     deleteExpense(id);
   };
+  const handleEdit = (id) => {
+    edit(id);
+  };
   const showExpense = allExpense.map((expense, index) => {
-    const formattedDate = format(new Date(expense.date), "dd MMM");
+    const formattedDate = format(new Date(expense.date), "dd MMM yy");
+    let expenseCategoryColor = ``;
+
+    if (expense.category == "Want") {
+      expenseCategoryColor = `badge text-bg-info text-white mx-5`;
+    } else if (expense.category == "Need") {
+      expenseCategoryColor = `badge text-bg-primary text-white mx-5`;
+    } else if (expense.category == "Investment") {
+      expenseCategoryColor = `badge text-bg-warning  mx-5`;
+    }
     return (
       <div
         key={expense.id}
         className="row align-items-center bg-light p-2 mb-2 rounded"
       >
         <div className="col-1">{`${index + 1})`}</div>
-        <div className="col-4">
+        <div className="col-3">
           {`${expense.expenseName
+            .trim()
             .charAt(0)
             .toUpperCase()}${expense.expenseName.slice(1)}`}
+          <span className={expenseCategoryColor}>{expense.category}</span>
         </div>
         <div className="col-3">{expense.amount}</div>
         <div className="col-3">{formattedDate}</div>
-        <div className="col-1">
+        <div className="col-2">
           <button
             onClick={() => handleDelete(expense.id)}
             className="btn btn-secondary btn-sm"
           >
             Delete
+          </button>
+          <button
+            onClick={() => handleEdit(expense.id)}
+            className="btn btn-secondary btn-sm mx-2"
+          >
+            Edit
           </button>
         </div>
       </div>
