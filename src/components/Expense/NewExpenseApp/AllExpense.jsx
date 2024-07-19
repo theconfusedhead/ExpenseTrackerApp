@@ -1,75 +1,85 @@
-import React, { useState } from "react";
+import React from "react";
 import { format } from "date-fns";
 
 const AllExpense = ({ allExpense, deleteExpense, edit }) => {
-  // const [editExpense, setEditExpense] = useState("");
   const handleDelete = (id) => {
     deleteExpense(id);
   };
+
   const handleEdit = (id) => {
     edit(id);
   };
-  const showExpense = allExpense.map((expense, index) => {
-    const formattedDate = format(new Date(expense.date), "dd MMM yy");
-    let expenseCategoryColor = ``;
 
-    if (expense.category == "Want") {
-      expenseCategoryColor = `badge text-bg-info text-white mx-5`;
-    } else if (expense.category == "Need") {
-      expenseCategoryColor = `badge text-bg-primary text-white mx-5`;
-    } else if (expense.category == "Investment") {
-      expenseCategoryColor = `badge text-bg-warning  mx-5`;
+  const getCategoryColor = (category) => {
+    switch (category) {
+      case "Want":
+        return "bg-info";
+      case "Need":
+        return "bg-primary";
+      case "Investment":
+        return "bg-warning text-dark";
+      default:
+        return "bg-secondary";
     }
-    return (
-      <div
-        key={expense.id}
-        className="row align-items-center bg-light p-2 mb-2 rounded"
-      >
-        <div className="col-1">{`${index + 1})`}</div>
-        <div className="col-3">
-          {`${expense.expenseName
-            .trim()
-            .charAt(0)
-            .toUpperCase()}${expense.expenseName.slice(1)}`}
-          <span className={expenseCategoryColor}>{expense.category}</span>
-        </div>
-        <div className="col-3">{expense.amount}</div>
-        <div className="col-3">{formattedDate}</div>
-        <div className="col-2">
-          <button
-            onClick={() => handleDelete(expense.id)}
-            className="btn btn-secondary btn-sm"
-          >
-            Delete
-          </button>
-          <button
-            onClick={() => handleEdit(expense.id)}
-            className="btn btn-secondary btn-sm mx-2"
-          >
-            Edit
-          </button>
-        </div>
-      </div>
-    );
-  });
+  };
+
   return (
     <div className="mt-5">
-      <h4>Your Expenses:</h4>
-      <div class="row flex-nowrap overflow-auto bg-light p-2 mb-2 rounded">
-        <div class="col-3 col-sm-1">
-          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">S No</h3>
-        </div>
-        <div class="col-3 col-sm-4">
-          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">Name</h3>
-        </div>
-        <div class="col-3 col-sm-3">
-          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">Amount</h3>
-        </div>
-        <div class="col-3 col-sm-4">
-          <h3 class="fs-6 fs-sm-5 mb-0 text-nowrap">Date</h3>
-        </div>
+      <h4 className="mb-4">Your Expenses:</h4>
+      <div className="table-responsive">
+        <table className="table table-hover">
+          <thead className="table-light">
+            <tr>
+              <th>#</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {allExpense.map((expense, index) => {
+              const formattedDate = format(new Date(expense.date), "dd MMM yy");
+              return (
+                <tr key={expense.id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    {expense.expenseName.charAt(0).toUpperCase() +
+                      expense.expenseName.slice(1)}
+                  </td>
+                  <td>
+                    <span
+                      className={`badge ${getCategoryColor(expense.category)}`}
+                    >
+                      {expense.category}
+                    </span>
+                  </td>
+                  <td>{parseFloat(expense.amount).toFixed(2)}</td>
+                  <td>{formattedDate}</td>
+                  <td>
+                    <button
+                      onClick={() => handleEdit(expense.id)}
+                      className="btn btn-sm btn-outline-primary me-2"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(expense.id)}
+                      className="btn btn-sm btn-outline-danger"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-      <div>{showExpense}</div>
+      {allExpense.length === 0 && (
+        <p className="text-center text-muted">No expenses recorded yet.</p>
+      )}
     </div>
   );
 };
