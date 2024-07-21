@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AllExpense from "./AllExpense";
 import { nanoid } from "nanoid";
 import Categories from "./CategoryFilter";
 const ExpenseForm = ({ getTotalExpense }) => {
+  const formRef = useRef(null);
   const getTodayDate = () => {
     const date = new Date();
     let dayDate = "" + date.getDate();
@@ -84,6 +85,9 @@ const ExpenseForm = ({ getTotalExpense }) => {
       setDataInput(expenseToEdit);
       setIsEditing(true);
     }
+    setTimeout(() => {
+      formRef?.current.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   const allCategory = [
@@ -148,7 +152,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} ref={formRef}>
         <label className="form-label">Expense Name:</label>
         <input
           type="text"
