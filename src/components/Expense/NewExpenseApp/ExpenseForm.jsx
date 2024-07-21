@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import AllExpense from "./AllExpense";
 import { nanoid } from "nanoid";
 import Categories from "./CategoryFilter";
+import Modal from "./Modal";
 const ExpenseForm = ({ getTotalExpense }) => {
   const formRef = useRef(null);
   const getTodayDate = () => {
@@ -24,13 +25,14 @@ const ExpenseForm = ({ getTotalExpense }) => {
     category: "Select Category",
     date: getTodayDate(),
   });
+  const [isOpen, setIsOpen] = useState(false);
   const [cateFilterName, setCateFilterName] = useState("all");
   const [allExpense, setAllExpense] = useState(() => {
     const storedExpense = localStorage.getItem("allExpense");
     return JSON.parse(storedExpense) || [];
   });
   const [filteredExpenses, setFilteredExpenses] = useState(allExpense);
-
+  const [expenseToDelete, setExpenseToDelete] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [categoryExpenseTotal, setCategoryExpenseTotal] = useState("");
   const options = ["Select Category", "Need", "Want", "Investment"];
@@ -75,8 +77,18 @@ const ExpenseForm = ({ getTotalExpense }) => {
   }, [allExpense, getTotalExpense]);
 
   const deleteExpense = (id) => {
-    const newExpenses = allExpense.filter((expense) => expense.id !== id);
-    setAllExpense(newExpenses);
+    setIsOpen(true);
+    setExpenseToDelete(id);
+  };
+  const handleConfirmDelete = () => {
+    if (expenseToDelete) {
+      const newExpenses = allExpense.filter(
+        (expense) => expense.id !== expenseToDelete
+      );
+      setAllExpense(newExpenses);
+      setIsOpen(false);
+      setExpenseToDelete(null);
+    }
   };
 
   const editExpense = (id) => {
@@ -149,9 +161,18 @@ const ExpenseForm = ({ getTotalExpense }) => {
       document.body.removeChild(link);
     }
   };
-
+  const handleCancelDelete = () => {
+    setIsOpen(false);
+    setExpenseToDelete(null);
+  };
   return (
     <>
+      <Modal
+        isOpen={isOpen}
+        message={"do you want to delete the following expense?"}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
       <form onSubmit={handleSubmit} ref={formRef}>
         <label className="form-label">Expense Name:</label>
         <input
@@ -199,7 +220,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
 
       {cateFilterName !== "all" && (
         <div class="p-3 my-2 bg-success text-white">
-          Total of {cateFilterName} {categoryExpenseTotal}{" "}
+          Total of {cateFilterName}: {categoryExpenseTotal}{" "}
         </div>
       )}
 
