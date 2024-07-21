@@ -181,14 +181,16 @@ const ExpenseForm = ({ getTotalExpense }) => {
           value={dataInput.expenseName}
           onChange={handleChange}
           className="form-control"
+          required
         />
         <label className="form-label">Expense amount:</label>
         <input
-          type="text"
+          type="number"
           name="amount"
           value={dataInput.amount}
           onChange={handleChange}
           className="form-control"
+          required
         />
         <label className="form-label">Expense Category:</label>
         <select
@@ -196,9 +198,10 @@ const ExpenseForm = ({ getTotalExpense }) => {
           name="category"
           value={dataInput.category}
           onChange={handleChange}
+          required
         >
           {options.map((option) => (
-            <option value={option} key={option}>
+            <option value={option} key={option} required>
               {option}
             </option>
           ))}
