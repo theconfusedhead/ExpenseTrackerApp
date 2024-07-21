@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AllExpense from "./AllExpense";
 import { nanoid } from "nanoid";
-
+import Categories from "./CategoryFilter";
 const ExpenseForm = ({ getTotalExpense }) => {
   const getTodayDate = () => {
     const date = new Date();
@@ -16,7 +16,6 @@ const ExpenseForm = ({ getTotalExpense }) => {
     }
     return [getFullYear, monthIndex, dayDate].join("-");
   };
-
   const [dataInput, setDataInput] = useState({
     id: nanoid(),
     expenseName: "",
@@ -29,6 +28,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
     const storedExpense = localStorage.getItem("allExpense");
     return JSON.parse(storedExpense) || [];
   });
+  const [filteredExpenses, setFilteredExpenses] = useState(allExpense);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -69,6 +69,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
     getTotalExpense(allExpenseTotal);
     localStorage.setItem("allExpense", JSON.stringify(allExpense));
     localStorage.setItem("totalExpense", JSON.stringify(allExpenseTotal));
+    setFilteredExpenses(allExpense);
   }, [allExpense, getTotalExpense]);
 
   const deleteExpense = (id) => {
@@ -84,6 +85,24 @@ const ExpenseForm = ({ getTotalExpense }) => {
     }
   };
 
+  const allCategory = [
+    "all",
+    ...new Set(
+      allExpense.map((expense) => {
+        return expense.category;
+      })
+    ),
+  ];
+  const getFilterName = (categoryName) => {
+    if (categoryName === "all") {
+      setFilteredExpenses(allExpense);
+    } else {
+      const newExpenseListByCategory = allExpense.filter(
+        (expense) => expense.category === categoryName
+      );
+      setFilteredExpenses(newExpenseListByCategory);
+    }
+  };
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -128,8 +147,9 @@ const ExpenseForm = ({ getTotalExpense }) => {
           {isEditing ? "Update" : "Submit"}
         </button>
       </form>
+      <Categories allCategory={allCategory} getFilterName={getFilterName} />
       <AllExpense
-        allExpense={allExpense}
+        allExpense={filteredExpenses}
         deleteExpense={deleteExpense}
         edit={editExpense}
       />
