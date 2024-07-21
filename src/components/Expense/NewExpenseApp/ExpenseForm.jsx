@@ -23,7 +23,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
     category: "Select Category",
     date: getTodayDate(),
   });
-
+  const [cateFilterName, setCateFilterName] = useState("all");
   const [allExpense, setAllExpense] = useState(() => {
     const storedExpense = localStorage.getItem("allExpense");
     return JSON.parse(storedExpense) || [];
@@ -31,7 +31,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
   const [filteredExpenses, setFilteredExpenses] = useState(allExpense);
 
   const [isEditing, setIsEditing] = useState(false);
-
+  const [categoryExpenseTotal, setCategoryExpenseTotal] = useState("");
   const options = ["Select Category", "Need", "Want", "Investment"];
 
   const handleChange = (e) => {
@@ -70,6 +70,7 @@ const ExpenseForm = ({ getTotalExpense }) => {
     localStorage.setItem("allExpense", JSON.stringify(allExpense));
     localStorage.setItem("totalExpense", JSON.stringify(allExpenseTotal));
     setFilteredExpenses(allExpense);
+    // setCategoryExpenseTotal(allExpenseTotal);
   }, [allExpense, getTotalExpense]);
 
   const deleteExpense = (id) => {
@@ -96,13 +97,55 @@ const ExpenseForm = ({ getTotalExpense }) => {
   const getFilterName = (categoryName) => {
     if (categoryName === "all") {
       setFilteredExpenses(allExpense);
+      setCateFilterName(categoryName);
     } else {
+      setCateFilterName(categoryName);
       const newExpenseListByCategory = allExpense.filter(
         (expense) => expense.category === categoryName
       );
+      const totalNewExpenseListCategory = newExpenseListByCategory.reduce(
+        (total, acc) => {
+          total += parseFloat(acc.amount);
+          return total;
+        },
+        0
+      );
+      setCategoryExpenseTotal(totalNewExpenseListCategory);
       setFilteredExpenses(newExpenseListByCategory);
+      console.log(totalNewExpenseListCategory);
     }
   };
+  const generateCSV = (expenses) => {
+    const headers = ["Expense Name", "Amount", "Category", "Date"];
+    const rows = expenses.map((expense) => [
+      expense.expenseName,
+      expense.amount,
+      expense.category,
+      expense.date,
+    ]);
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map((row) => row.join(",")),
+    ].join("\n");
+
+    return csvContent;
+  };
+  const downloadCSV = () => {
+    const csvContent = generateCSV(filteredExpenses);
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", "expenses.csv");
+      link.style.visibility = "hidden";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -147,7 +190,20 @@ const ExpenseForm = ({ getTotalExpense }) => {
           {isEditing ? "Update" : "Submit"}
         </button>
       </form>
+
       <Categories allCategory={allCategory} getFilterName={getFilterName} />
+
+      {cateFilterName !== "all" && (
+        <div class="p-3 my-2 bg-success text-white">
+          Total of {cateFilterName} {categoryExpenseTotal}{" "}
+        </div>
+      )}
+
+      <div>
+        <button onClick={downloadCSV} className="btn btn-primary my-3">
+          Download Expenses
+        </button>
+      </div>
       <AllExpense
         allExpense={filteredExpenses}
         deleteExpense={deleteExpense}
